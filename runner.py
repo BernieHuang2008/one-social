@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 import selenium.webdriver as webdriver
 import json
+
+
 GLOBAL_CONFIG = {
     "selenium_driver": "edge",
 }
@@ -105,7 +107,10 @@ class Runner:
 
 if __name__ == '__main__':
     runner = Runner()
-    runner.main('general', {'title': 'this is title', 'author': 'i author',
-                'content': 'test content (only text content is available now)'})
+    runner.main('general', {
+                    'title': 'this is title',
+                    'author': 'i author',
+                    'content': 'test content (only text content is available now)'
+                })
     import time
     time.sleep(120)
