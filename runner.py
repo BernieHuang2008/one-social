@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 import selenium.webdriver as webdriver
 import json
+import os
 
 
 GLOBAL_CONFIG = {
@@ -34,7 +35,7 @@ class Runner:
         """
         Get config from config file
         """
-        with open(f"platforms/{config_file.lower()}.json", 'r') as f:
+        with open(f"social_platforms/{config_file.lower()}.json", 'r') as f:
             config = json.load(f)
         self.config = config
 
@@ -90,13 +91,39 @@ class Runner:
             By.CSS_SELECTOR, config['content']).send_keys(content['content'])
         print("\033[90m [+] Content wrote successfully. \033[0m")
 
-    def main(self, post_type, content):
+    def main(self, social_platform, post_type, content):
         # init
-        self.get_config('wechat')
+        self.get_config(social_platform)
         self.open_driver()
 
         # login
-        self.login()
+        try_again = True
+        while try_again:
+            if os.path.exists(f"cookies/{social_platform}.json"):
+                with open(f"cookies/{social_platform}.json", 'r') as f:
+                    cookies = json.load(f)
+
+                for cookie in cookies:
+                    self.driver.add_cookie(cookie)
+
+                self.driver.refresh()
+
+                # check success
+            else:
+                self.login()
+                cookies = self.driver.get_cookies()
+                with open(f"cookies/{social_platform}.json", 'w') as f:
+                    json.dump(cookies, f)
+
+            # check status
+            try:
+                wait = WebDriverWait(self.driver, 5)
+                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, self.config['login']['checker'])))
+                print("\033[90m [+] Login successfully. \033[0m")
+                try_again = False
+            except:
+                print("\033[31m [!] Login failed. Please try again. \033[0m")
+                os.delete(f"cookies/{social_platform}.json")
 
         # navigate to post page
         self.navigate_to(self.config['post'][post_type]['nav'])
@@ -107,10 +134,10 @@ class Runner:
 
 if __name__ == '__main__':
     runner = Runner()
-    runner.main('general', {
-                    'title': 'this is title',
-                    'author': 'i author',
-                    'content': 'test content (only text content is available now)'
-                })
+    runner.main('wechat', 'general', {
+        'title': 'this is title',
+        'author': 'i author',
+        'content': 'test content (only text content is available now)'
+    })
     import time
     time.sleep(120)

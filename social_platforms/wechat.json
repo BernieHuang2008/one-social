@@ -1,7 +1,8 @@
 {
     "base_url": "https://mp.weixin.qq.com",
     "login": {
-        "type": "qrcode"
+        "type": "qrcode",
+        "checker": "#app > div.main_bd_new > div:nth-child(3) > div.weui-desktop-panel__hd.weui-desktop-global-mod > div > h2"
     },
     "post": {
         "general": {
