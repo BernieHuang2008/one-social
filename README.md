@@ -11,3 +11,13 @@ manage all social medias in **ONE** place.
 |FaceBook|fb.py|https://developers.facebook.com/docs/graph-api/get-started|
 |X|x.py|https://developer.twitter.com/en/docs/twitter-api|
 |Youtube|youtube.py|https://developers.google.com/youtube/v3/docs/|
+
+
+# Contribution Guide
+## New Social Media Support:
+1. should provide apis below:
+
+|Name|function|parameters|output|desc|
+|-|-|-|-|-|
+|set token|`set_token`|`token:str`|None|set the access token **ONLY** in this session|
+
