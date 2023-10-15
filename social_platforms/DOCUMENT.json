@@ -1,0 +1,31 @@
+{
+    "base_url": "BASE URL TO THE WEBSITE",
+    "login": {
+        "type": "LOGIN TYPE",
+        "checker": "IF THIS ELEMENT WAS FOUND, MEANING THE LOGING SUCCEEDED (CSS SELECTOR)"
+    },
+    "post": {
+        "POST TYPE 1": {
+            "nav": {
+                "steps": [
+                    "HOW TO NAVIGATE TO THE POST PAGE, FROM THE HOME PAGE",
+                    ["METHOD", "PARAMETER"],
+                    ["c - CLICK", "CLICK THE SPECIFIED ELEMENT USING CSS SELECTOR"],
+                    ["s - SWITCH", "SWITCH TO SPECIFIED CHROME TABS, USING 0-BASED-INDEX"]
+                ],
+                "checker": "CHECK IF THE NAVIGATION SUCCEEDED (CSS SELECTOR)"
+            },
+            "title": "WHERE TO WRITE THE TITLE (CSS SELECTOR)",
+            "author": "WHERE TO WRITE THE AUTHOR (CSS SELECTOR)",
+            "content": "WHERE TO WRITE THE ARTICLE CONTENT (CSS SELECTOR)",
+            "medias": {
+                "DESC": "HOW TO UPLOAD THE MEDIAS",
+                "MEDIA TYPE 1": {
+                    "upload_method": "USE WHICH METHOD TO UPLOAD THE MEDIA. SUPPORTED VALUES: CLIPBOARD, FILE, UNSUPPOTED(DEFAULT)"
+                },
+                "MEDIA TYPE 2": {}
+            }
+        },
+        "POST TYPE 2": {}
+    }
+}

@@ -15,7 +15,12 @@
             },
             "title": "#title",
             "author": "#author",
-            "content": "#ueditor_0"
+            "content": "#ueditor_0",
+            "medias": {
+                "image": {
+                    "upload_method": "CLIPBOARD"
+                }
+            }
         }
     }
 }

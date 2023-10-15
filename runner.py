@@ -93,14 +93,20 @@ class Runner:
 
         # write content
         target = self.driver.find_element(By.CSS_SELECTOR, config['content'])
-        for item in content['content']:
-            if isinstance(item, str):  # text content
-                target.send_keys(item)
-            elif isinstance(item, media.Image):  # media.image content
-                item.copy_to_clipboard()
-                target.send_keys(Keys.CONTROL,'v')
-            else:
-                raise Exception(f"Unknown content type: {type(item)}")
+        for item in content['content']:  
+            # text content
+            if isinstance(item, str):
+                method = config['medias'].get('text', {}).get('upload_method', 'CLIPBOARD')
+                if method == 'CLIPBOARD':
+                    target.send_keys(item)
+
+            # media.image content
+            if isinstance(item, media.Image):
+                method = config['medias'].get('image', {}).get('upload_method', 'UNSUPPOTED')
+                if method == 'CLIPBOARD':
+                    item.copy_to_clipboard()
+                    target.send_keys(Keys.CONTROL,'v')
+            
 
         # print log
         print("\033[90m [+] Content wrote successfully. \033[0m")
