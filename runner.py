@@ -4,9 +4,11 @@ Post article on a specified platform with their config file
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 import selenium.webdriver as webdriver
 import json
 import os
+import media
 
 
 GLOBAL_CONFIG = {
@@ -83,12 +85,24 @@ class Runner:
         """
         Write content to a specified platform
         """
+        # write title & author
         self.driver.find_element(
             By.CSS_SELECTOR, config['title']).send_keys(content['title'])
         self.driver.find_element(
             By.CSS_SELECTOR, config['author']).send_keys(content['author'])
-        self.driver.find_element(
-            By.CSS_SELECTOR, config['content']).send_keys(content['content'])
+
+        # write content
+        target = self.driver.find_element(By.CSS_SELECTOR, config['content'])
+        for item in content['content']:
+            if isinstance(item, str):  # text content
+                target.send_keys(item)
+            elif isinstance(item, media.Image):  # media.image content
+                item.copy_to_clipboard()
+                target.send_keys(Keys.CONTROL,'v')
+            else:
+                raise Exception(f"Unknown content type: {type(item)}")
+
+        # print log
         print("\033[90m [+] Content wrote successfully. \033[0m")
 
     def main(self, social_platform, post_type, content):
@@ -118,12 +132,14 @@ class Runner:
             # check status
             try:
                 wait = WebDriverWait(self.driver, 5)
-                wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, self.config['login']['checker'])))
+                wait.until(EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, self.config['login']['checker'])))
                 print("\033[90m [+] Login successfully. \033[0m")
                 try_again = False
             except:
                 print("\033[31m [!] Login failed. Please try again. \033[0m")
                 os.delete(f"cookies/{social_platform}.json")
+                try_again = True
 
         # navigate to post page
         self.navigate_to(self.config['post'][post_type]['nav'])
@@ -137,7 +153,10 @@ if __name__ == '__main__':
     runner.main('wechat', 'general', {
         'title': 'this is title',
         'author': 'i author',
-        'content': 'test content (only text content is available now)'
+        'content': [
+            'test content (only text content is available now)\nnew line. ',
+            media.Image('C:/Users/BernieHuang/Pictures/diary.png')
+        ]
     })
     import time
     time.sleep(120)

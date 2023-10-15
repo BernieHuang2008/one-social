@@ -1,2 +1,3 @@
 selenium
-
+pillow
+pywin32
